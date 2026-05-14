@@ -17,7 +17,7 @@ End-to-end UI tests for [TweenieAI UAT](https://platform.uat.tweenieai.com/) bui
 
 ## Prerequisites
 
-- Node.js **≥ 20** (project uses Node 24 locally)
+- Node.js **≥ 22.13** (project uses Node 24 locally; pnpm 11.x requires Node 22.13+)
 - pnpm activated via Corepack: `corepack enable pnpm`
 - Browsers: `pnpm exec playwright install --with-deps`
 
@@ -95,7 +95,7 @@ Optional (only if you want to override the default baseURL per environment):
 
 `.github/workflows/pr-tests.yml` runs on every PR to `main` (and on direct pushes to `main`):
 
-1. Setup Node 20 + pnpm via Corepack
+1. Setup Node 22 + pnpm via Corepack
 2. `pnpm install --frozen-lockfile`
 3. Cache Playwright browsers keyed on the installed `@playwright/test` version
 4. Run `playwright test --project=chromium`
