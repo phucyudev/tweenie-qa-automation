@@ -15,7 +15,10 @@
     "test:chromium": "playwright test --project=chromium",
     "test:report": "playwright show-report",
     "codegen": "playwright codegen https://platform.uat.tweenieai.com/",
-    "mcp": "npx @playwright/mcp@latest"
+    "mcp": "playwright-mcp",
+    "mcp:help": "playwright-mcp --help",
+    "mcp:headed": "playwright-mcp --no-headless",
+    "mcp:isolated": "playwright-mcp --isolated"
   },
   "keywords": [
     "playwright",
@@ -27,6 +30,7 @@
   "author": "Tran Gia Phuc <phuc.tran@diaflow.io>",
   "license": "UNLICENSED",
   "devDependencies": {
+    "@playwright/mcp": "^0.0.75",
     "@playwright/test": "^1.60.0",
     "@types/node": "^25.7.0",
     "dotenv": "^17.4.2",

@@ -11,6 +11,8 @@ blob-report/
 playwright/.cache/
 .auth/
 
+.playwright-mcp/
+
 .DS_Store
 .vscode/
 .idea/
