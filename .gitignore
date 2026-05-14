@@ -1,0 +1,17 @@
+node_modules/
+.pnpm-store/
+
+.env
+.env.local
+.env.*.local
+
+playwright-report/
+test-results/
+blob-report/
+playwright/.cache/
+.auth/
+
+.DS_Store
+.vscode/
+.idea/
+*.log

@@ -1,0 +1,35 @@
+{
+  "name": "tweenie-qa-automation",
+  "version": "0.1.0",
+  "description": "QA Automation suite for TweenieAI platform (UAT) using Playwright + TypeScript with MCP-assisted authoring",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@11.1.2",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "test": "playwright test",
+    "test:ui": "playwright test --ui",
+    "test:headed": "playwright test --headed",
+    "test:chromium": "playwright test --project=chromium",
+    "test:report": "playwright show-report",
+    "codegen": "playwright codegen https://platform.uat.tweenieai.com/",
+    "mcp": "npx @playwright/mcp@latest"
+  },
+  "keywords": [
+    "playwright",
+    "qa",
+    "automation",
+    "tweenieai",
+    "mcp"
+  ],
+  "author": "Tran Gia Phuc <phuc.tran@diaflow.io>",
+  "license": "UNLICENSED",
+  "devDependencies": {
+    "@playwright/test": "^1.60.0",
+    "@types/node": "^25.7.0",
+    "dotenv": "^17.4.2",
+    "typescript": "^6.0.3"
+  }
+}
