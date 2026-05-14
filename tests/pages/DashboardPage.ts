@@ -20,7 +20,10 @@ export class DashboardPage extends BasePage {
   }
 
   async waitForLoaded(): Promise<void> {
-    await expect(this.page).toHaveURL(/\/dashboard/);
+    // Login flows through an SSO redirect (automation.uat.tweenieai.com/redirect?...)
+    // before landing on the dashboard. CI cold starts can take >10s for the
+    // round-trip, so allow up to 30s instead of the default expect timeout.
+    await this.page.waitForURL(/\/dashboard/, { timeout: 30_000 });
     await expect(this.taskInput).toBeVisible();
     await expect(this.newChatNav).toBeVisible();
   }
