@@ -1,5 +1,7 @@
 # TweenieAI QA Automation
 
+[![Playwright Tests](https://github.com/phucyudev/tweenie-qa-automation/actions/workflows/pr-tests.yml/badge.svg)](https://github.com/phucyudev/tweenie-qa-automation/actions/workflows/pr-tests.yml)
+
 End-to-end UI tests for [TweenieAI UAT](https://platform.uat.tweenieai.com/) built with **Playwright + TypeScript**, authored with the help of **Microsoft Playwright MCP**, executed on **GitHub Actions**, and reported on **Cloudflare Pages**.
 
 ## Stack
@@ -45,20 +47,64 @@ playwright.config.ts
 
 ## Using Playwright MCP for AI-assisted authoring
 
-`.mcp.json` registers the Playwright MCP server so AI editors (Claude Code, Cursor, etc.) can drive a real browser while you describe what to test in natural language.
+`@playwright/mcp` is installed as a **pinned devDependency** (see `package.json`). `.mcp.json` points AI editors (Claude Code, Cursor, …) at the local binary so the version stays consistent across the team and there is no per-launch network fetch.
 
-**Example prompts** to your AI editor with MCP loaded:
+```bash
+pnpm mcp            # start MCP server (headless, what Claude Code uses)
+pnpm mcp:headed     # start with a visible browser window for debugging
+pnpm mcp:isolated   # fresh browser context every session (no cookies persisted)
+pnpm mcp:help       # see all flags
+```
+
+**Example prompts** to your AI editor once MCP is connected:
 - *"Open the login page, take a snapshot, and list every interactive element."*
 - *"Sign in with the UAT account from .env.local, then write a Playwright test that asserts the dashboard greeting is visible."*
 - *"Record a flow: create a new project, rename it, then delete it. Save the result as `tests/specs/project-crud.spec.ts`."*
+
+**Upgrading**: `pnpm up @playwright/mcp@latest`, then commit the lockfile so the team picks it up.
 
 MCP runs **only on your local machine** — CI uses `@playwright/test` directly.
 
 ## Credentials & secrets
 
 Never commit credentials.
-- Local: `.env.local` (gitignored)
-- CI: GitHub Secrets (`TEST_USER_EMAIL`, `TEST_USER_PASSWORD`) — wired up in Phase 4
+- **Local**: `.env.local` (gitignored)
+- **CI (GitHub Actions)**: repository secrets — see below
+
+### Required GitHub Secrets
+
+Go to **Settings → Secrets and variables → Actions → New repository secret** and add:
+
+| Name | Value |
+|---|---|
+| `TEST_USER_EMAIL` | `automation@diaflow.io` |
+| `TEST_USER_PASSWORD` | *(the UAT account password — same as `.env.local`)* |
+
+Optional (only if you want to override the default baseURL per environment):
+| Name | Value |
+|---|---|
+| `BASE_URL` | e.g. `https://platform.staging.tweenieai.com/` |
+
+> Tip with the GitHub CLI:
+> ```bash
+> gh secret set TEST_USER_EMAIL --body "automation@diaflow.io"
+> gh secret set TEST_USER_PASSWORD   # paste when prompted, no shell history
+> ```
+
+## CI workflow
+
+`.github/workflows/pr-tests.yml` runs on every PR to `main` (and on direct pushes to `main`):
+
+1. Setup Node 20 + pnpm via Corepack
+2. `pnpm install --frozen-lockfile`
+3. Cache Playwright browsers keyed on the installed `@playwright/test` version
+4. Run `playwright test --project=chromium`
+5. Upload **HTML report** as an artifact (`playwright-report-chromium-*`), retained 14 days
+6. On failure, also upload `test-results/` (traces & videos), retained 7 days
+
+Download the artifact from the Actions run summary, unzip, and open `index.html` to inspect.
+
+Hosted report on Cloudflare Pages is wired up in Phase 5 — until then, use artifacts.
 
 ## Roadmap
 
@@ -66,6 +112,6 @@ Never commit credentials.
 - ✅ Phase 1 — project skeleton, TS config, Playwright config
 - ✅ Phase 2 — Playwright MCP integration
 - ✅ Phase 3 — POM + auth fixture + smoke spec
-- ⏳ Phase 4 — GitHub Actions workflow (PR-triggered, sharded, merged report)
+- ✅ Phase 4 — GitHub Actions workflow (PR-triggered, browser caching, artifact reports)
 - ⏳ Phase 5 — Cloudflare Pages deploy of HTML report per PR
 - ⏳ Phase 6 — CODEOWNERS, PR template, branch protection
