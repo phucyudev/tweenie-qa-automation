@@ -96,10 +96,12 @@ test.describe('Pages: TweenieAI', () => {
     });
 
     await test.step('Trash tab → click "Delete all"', async () => {
-      // Re-enter the Trash tab — Restore all may have caused Diaflow to
-      // re-render the panel and Delete all needs the tab to be active.
-      await pages.switchToTrash();
-      await expect(pages.trashDeleteAll).toBeVisible({ timeout: 15_000 });
+      // Restore all may trigger a panel re-render while items get moved
+      // back to Personal. Wait up to 30s for Delete all to settle in
+      // place before clicking — do NOT re-click the Trash tab, the
+      // Trash button can briefly disappear from the DOM during the
+      // re-render and that has caused CI to fail all three retries.
+      await expect(pages.trashDeleteAll).toBeVisible({ timeout: 30_000 });
       await pages.trashDeleteAll.click();
       const confirm = page.getByRole('dialog').getByRole('button', { name: /OK|Confirm|Yes|Delete/i }).first();
       if (await confirm.isVisible({ timeout: 2_000 }).catch(() => false)) {
