@@ -23,9 +23,15 @@ export class DashboardPage extends BasePage {
 
   async waitForLoaded(): Promise<void> {
     // Login goes through an SSO redirect (workspace-specific subdomain → /redirect?…)
-    // before landing on /dashboard. CI cold starts can take >10s for the round-trip,
-    // so allow 30s instead of the default expect timeout.
-    await this.page.waitForURL(/\/dashboard/, { timeout: 30_000 });
+    // before landing on /dashboard. Two reasons we poll with toHaveURL instead of
+    // waitForURL:
+    //  1) waitForURL waits for the page 'load' event after the URL match; the
+    //     Diaflow SPA frequently swallows that event on intermediate redirects,
+    //     leaving the URL correct but the wait hanging until timeout.
+    //  2) toHaveURL is an assertion that only polls the current URL — it does
+    //     not require any navigation lifecycle event to fire.
+    // 30s budget covers CI cold starts on the SSO round-trip.
+    await expect(this.page).toHaveURL(/\/dashboard/, { timeout: 30_000 });
     await expect(this.taskComposer).toBeVisible();
     await expect(this.newChatNav).toBeVisible();
   }
