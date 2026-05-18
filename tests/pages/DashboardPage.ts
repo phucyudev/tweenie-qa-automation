@@ -5,7 +5,8 @@ export class DashboardPage extends BasePage {
   readonly greeting: Locator;
   readonly newChatNav: Locator;
   readonly flowsNav: Locator;
-  readonly taskInput: Locator;
+  readonly taskComposer: Locator;
+  readonly taskComposerPlaceholder: Locator;
   readonly workspaceLabel: Locator;
 
   constructor(page: Page) {
@@ -15,16 +16,17 @@ export class DashboardPage extends BasePage {
     );
     this.newChatNav = page.getByText('New Chat', { exact: true });
     this.flowsNav = page.getByText('Flows', { exact: true });
-    this.taskInput = page.getByText('Give Diaflow a task');
+    this.taskComposer = page.locator('main').getByRole('textbox');
+    this.taskComposerPlaceholder = page.getByText('Give Diaflow a task');
     this.workspaceLabel = page.getByText('My Workspace', { exact: true });
   }
 
   async waitForLoaded(): Promise<void> {
-    // Login flows through an SSO redirect (automation.uat.tweenieai.com/redirect?...)
-    // before landing on the dashboard. CI cold starts can take >10s for the
-    // round-trip, so allow up to 30s instead of the default expect timeout.
+    // Login goes through an SSO redirect (workspace-specific subdomain → /redirect?…)
+    // before landing on /dashboard. CI cold starts can take >10s for the round-trip,
+    // so allow 30s instead of the default expect timeout.
     await this.page.waitForURL(/\/dashboard/, { timeout: 30_000 });
-    await expect(this.taskInput).toBeVisible();
+    await expect(this.taskComposer).toBeVisible();
     await expect(this.newChatNav).toBeVisible();
   }
 

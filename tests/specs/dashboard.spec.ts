@@ -1,7 +1,7 @@
 import { test, expect } from '../fixtures/auth.fixture.js';
 import { DashboardPage } from '../pages/DashboardPage.js';
 
-test.describe('Dashboard: TweenieAI UAT', () => {
+test.describe('Dashboard: TweenieAI', () => {
   test('user can log in and start a new chat from the dashboard', async ({
     page,
     loginPage,
@@ -12,11 +12,11 @@ test.describe('Dashboard: TweenieAI UAT', () => {
     const dashboard = new DashboardPage(page);
     await dashboard.waitForLoaded();
     await expect(dashboard.workspaceLabel).toBeVisible();
-    await expect(dashboard.taskInput).toBeVisible();
+    await expect(dashboard.taskComposer).toBeVisible();
 
     await dashboard.startNewChat();
 
     await expect(page).toHaveURL(/\/dashboard/);
-    await expect(dashboard.taskInput).toBeVisible();
+    await expect(dashboard.taskComposer).toBeVisible();
   });
 });

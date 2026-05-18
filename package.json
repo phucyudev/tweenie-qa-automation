@@ -14,7 +14,7 @@
     "test:headed": "playwright test --headed",
     "test:chromium": "playwright test --project=chromium",
     "test:report": "playwright show-report",
-    "codegen": "playwright codegen https://platform.uat.tweenieai.com/",
+    "codegen": "playwright codegen https://platform.tweenieai.com/",
     "mcp": "playwright-mcp",
     "mcp:help": "playwright-mcp --help",
     "mcp:headed": "playwright-mcp --no-headless",

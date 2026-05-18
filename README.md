@@ -2,7 +2,9 @@
 
 [![Playwright Tests](https://github.com/phucyudev/tweenie-qa-automation/actions/workflows/pr-tests.yml/badge.svg)](https://github.com/phucyudev/tweenie-qa-automation/actions/workflows/pr-tests.yml)
 
-End-to-end UI tests for [TweenieAI UAT](https://platform.uat.tweenieai.com/) built with **Playwright + TypeScript**, authored with the help of **Microsoft Playwright MCP**, executed on **GitHub Actions**, and reported on **Cloudflare Pages**.
+End-to-end UI tests for [TweenieAI Dev](https://platform.tweenieai.com/) built with **Playwright + TypeScript**, authored with the help of **Microsoft Playwright MCP**, executed on **GitHub Actions**, and reported on **Cloudflare Pages**.
+
+Override `BASE_URL` in `.env.local` (or via GitHub Secrets in CI) to point at a different environment — e.g. UAT, staging, or local.
 
 ## Stack
 
@@ -58,7 +60,7 @@ pnpm mcp:help       # see all flags
 
 **Example prompts** to your AI editor once MCP is connected:
 - *"Open the login page, take a snapshot, and list every interactive element."*
-- *"Sign in with the UAT account from .env.local, then write a Playwright test that asserts the dashboard greeting is visible."*
+- *"Sign in with the test account from .env.local, then write a Playwright test that asserts the dashboard greeting is visible."*
 - *"Record a flow: create a new project, rename it, then delete it. Save the result as `tests/specs/project-crud.spec.ts`."*
 
 **Upgrading**: `pnpm up @playwright/mcp@latest`, then commit the lockfile so the team picks it up.
@@ -77,18 +79,18 @@ Go to **Settings → Secrets and variables → Actions → New repository secret
 
 | Name | Value |
 |---|---|
-| `TEST_USER_EMAIL` | `automation@diaflow.io` |
-| `TEST_USER_PASSWORD` | *(the UAT account password — same as `.env.local`)* |
+| `TEST_USER_EMAIL` | Email of the QA test account |
+| `TEST_USER_PASSWORD` | Password of the QA test account |
 
 Optional (only if you want to override the default baseURL per environment):
 | Name | Value |
 |---|---|
-| `BASE_URL` | e.g. `https://platform.staging.tweenieai.com/` |
+| `BASE_URL` | e.g. `https://platform.uat.tweenieai.com/` for UAT |
 
-> Tip with the GitHub CLI:
+> Tip with the GitHub CLI (pipe via stdin to avoid leaking the password into shell history):
 > ```bash
-> gh secret set TEST_USER_EMAIL --body "automation@diaflow.io"
-> gh secret set TEST_USER_PASSWORD   # paste when prompted, no shell history
+> grep '^TEST_USER_EMAIL=' .env.local    | cut -d= -f2- | gh secret set TEST_USER_EMAIL
+> grep '^TEST_USER_PASSWORD=' .env.local | cut -d= -f2- | gh secret set TEST_USER_PASSWORD
 > ```
 
 ## CI workflow

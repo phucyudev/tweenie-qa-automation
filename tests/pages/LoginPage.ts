@@ -23,7 +23,6 @@ export class LoginPage extends BasePage {
 
   async open(): Promise<void> {
     await this.goto('/');
-    await this.waitForReady();
   }
 
   async login(email: string, password: string): Promise<void> {

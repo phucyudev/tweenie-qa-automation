@@ -1,6 +1,6 @@
 import { test, expect } from '../fixtures/auth.fixture.js';
 
-test.describe('Smoke: TweenieAI UAT', () => {
+test.describe('Smoke: TweenieAI', () => {
   test('login page renders all required controls', async ({ loginPage }) => {
     await loginPage.expectLoaded();
     await expect(loginPage.googleButton).toBeVisible();

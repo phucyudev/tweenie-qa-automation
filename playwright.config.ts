@@ -30,7 +30,7 @@ export default defineConfig({
   outputDir: 'test-results',
 
   use: {
-    baseURL: process.env.BASE_URL ?? 'https://platform.uat.tweenieai.com/',
+    baseURL: process.env.BASE_URL ?? 'https://platform.tweenieai.com/',
     trace: isCI ? 'on-first-retry' : 'retain-on-failure',
     video: isCI ? 'retain-on-failure' : 'off',
     screenshot: 'only-on-failure',
