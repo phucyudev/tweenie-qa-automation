@@ -9,10 +9,12 @@ test.describe('Pages: TweenieAI', () => {
     loginPage,
     credentials,
   }) => {
-    // 6 Create iterations + sort + folder + Trash actions take ~40-50s on
-    // a fast network and well over a minute on cold CI runners. The
-    // default 45s CI timeout is not enough — give this spec its own budget.
-    test.setTimeout(180_000);
+    // 6 Create iterations + sort + folder + Trash actions take ~42s locally
+    // and ~57s on a warm CI runner, but the very first CI attempt of a session
+    // can stretch past 3 minutes while Diaflow's workspace subdomain warms up.
+    // Use 5 minutes to leave headroom and avoid masking the real failure mode
+    // behind retries.
+    test.setTimeout(300_000);
     let pages!: PagesPage;
 
     // If any Create-option flow opens a native file picker, cancel by
