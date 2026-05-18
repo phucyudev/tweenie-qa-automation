@@ -9,6 +9,10 @@ test.describe('Pages: TweenieAI', () => {
     loginPage,
     credentials,
   }) => {
+    // 6 Create iterations + sort + folder + Trash actions take ~40-50s on
+    // a fast network and well over a minute on cold CI runners. The
+    // default 45s CI timeout is not enough — give this spec its own budget.
+    test.setTimeout(180_000);
     let pages!: PagesPage;
 
     // If any Create-option flow opens a native file picker, cancel by
