@@ -37,7 +37,8 @@ export default defineConfig({
     actionTimeout: 15_000,
     navigationTimeout: 30_000,
     launchOptions: {
-      slowMo: isCI ? 0 : 150,
+      // Local default 150ms; override via SLOWMO_MS env var for demo walkthroughs.
+      slowMo: isCI ? 0 : Number(process.env.SLOWMO_MS ?? 150),
     },
   },
 
