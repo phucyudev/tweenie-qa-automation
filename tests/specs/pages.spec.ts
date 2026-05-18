@@ -96,7 +96,10 @@ test.describe('Pages: TweenieAI', () => {
     });
 
     await test.step('Trash tab → click "Delete all"', async () => {
-      await expect(pages.trashDeleteAll).toBeVisible();
+      // Re-enter the Trash tab — Restore all may have caused Diaflow to
+      // re-render the panel and Delete all needs the tab to be active.
+      await pages.switchToTrash();
+      await expect(pages.trashDeleteAll).toBeVisible({ timeout: 15_000 });
       await pages.trashDeleteAll.click();
       const confirm = page.getByRole('dialog').getByRole('button', { name: /OK|Confirm|Yes|Delete/i }).first();
       if (await confirm.isVisible({ timeout: 2_000 }).catch(() => false)) {
