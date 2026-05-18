@@ -37,7 +37,10 @@ export class PagesPage extends BasePage {
 
   async openFromSidebar(): Promise<void> {
     await this.pagesNav.click();
-    await this.page.waitForURL(/\/pages/, { timeout: 30_000 });
+    // toHaveURL polls page.url() without waiting for the 'load' event, which
+    // the Diaflow SPA frequently does not refire on intra-app route changes
+    // (see DashboardPage.waitForLoaded for the original investigation).
+    await expect(this.page).toHaveURL(/\/pages/, { timeout: 30_000 });
   }
 
   async openCreateMenu(): Promise<void> {
