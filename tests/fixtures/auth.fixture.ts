@@ -16,7 +16,7 @@ function readCredentials(): TestCredentials {
   const password = process.env.TEST_USER_PASSWORD;
   if (!email || !password) {
     throw new Error(
-      'Missing TEST_USER_EMAIL or TEST_USER_PASSWORD. Copy .env.example to .env.local and fill in the UAT account.',
+      'Missing TEST_USER_EMAIL or TEST_USER_PASSWORD. Copy .env.example to .env.local and fill in the QA test account.',
     );
   }
   return { email, password };

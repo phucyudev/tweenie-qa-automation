@@ -1,7 +1,7 @@
 {
   "name": "tweenie-qa-automation",
   "version": "0.1.0",
-  "description": "QA Automation suite for TweenieAI platform (UAT) using Playwright + TypeScript with MCP-assisted authoring",
+  "description": "QA Automation suite for the TweenieAI platform using Playwright + TypeScript with MCP-assisted authoring",
   "private": true,
   "type": "module",
   "packageManager": "pnpm@11.1.2",

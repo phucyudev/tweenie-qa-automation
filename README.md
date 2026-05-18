@@ -4,8 +4,6 @@
 
 End-to-end UI tests for [TweenieAI Dev](https://platform.tweenieai.com/) built with **Playwright + TypeScript**, authored with the help of **Microsoft Playwright MCP**, executed on **GitHub Actions**, and reported on **Cloudflare Pages**.
 
-Override `BASE_URL` in `.env.local` (or via GitHub Secrets in CI) to point at a different environment — e.g. UAT, staging, or local.
-
 ## Stack
 
 | Layer | Tool |
@@ -81,11 +79,6 @@ Go to **Settings → Secrets and variables → Actions → New repository secret
 |---|---|
 | `TEST_USER_EMAIL` | Email of the QA test account |
 | `TEST_USER_PASSWORD` | Password of the QA test account |
-
-Optional (only if you want to override the default baseURL per environment):
-| Name | Value |
-|---|---|
-| `BASE_URL` | e.g. `https://platform.uat.tweenieai.com/` for UAT |
 
 > Tip with the GitHub CLI (pipe via stdin to avoid leaking the password into shell history):
 > ```bash
