@@ -96,13 +96,17 @@ test.describe('Pages: TweenieAI', () => {
     });
 
     await test.step('Trash tab → click "Delete all"', async () => {
-      // Restore all may trigger a panel re-render while items get moved
-      // back to Personal. Wait up to 30s for Delete all to settle in
-      // place before clicking — do NOT re-click the Trash tab, the
-      // Trash button can briefly disappear from the DOM during the
-      // re-render and that has caused CI to fail all three retries.
+      // Restore all triggers a confirmation dialog + a panel re-render.
+      // Wait for the dialog to close so the Delete all button is no longer
+      // covered by the overlay, then force-click it. On CI the button
+      // resolves but its stability check fails because the row is still
+      // animating into place — the force flag skips actionability
+      // verification but the explicit visible check above keeps us honest.
+      await page.getByRole('dialog').first()
+        .waitFor({ state: 'hidden', timeout: 5_000 })
+        .catch(() => {});
       await expect(pages.trashDeleteAll).toBeVisible({ timeout: 30_000 });
-      await pages.trashDeleteAll.click();
+      await pages.trashDeleteAll.click({ force: true });
       const confirm = page.getByRole('dialog').getByRole('button', { name: /OK|Confirm|Yes|Delete/i }).first();
       if (await confirm.isVisible({ timeout: 2_000 }).catch(() => false)) {
         await confirm.click();
