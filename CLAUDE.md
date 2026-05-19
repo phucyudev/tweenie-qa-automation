@@ -25,15 +25,30 @@ that respect `CLAUDE.md` will pick it up too.
 
 The Diaflow UI does **not** expose semantic roles for the sidebar nav
 (no `<nav>`, no `<a>`/`<button>` for nav items — they are styled `<div>`s
-with onclick handlers). So:
+with onclick handlers). The Diaflow team **is** adding stable `id`
+attributes (their convention is `id`, *not* `data-testid`) but rollout
+is in progress, so most elements still need fallback strategies.
 
-1. Prefer `getByRole('button'/'textbox'/'link'/'dialog'/...)` whenever a
-   semantic role exists.
-2. Fall back to `getByText('…', { exact: true })` scoped via
-   `page.locator('main')`, `dialog.locator(...)`, etc., for nav items
-   and other non-semantic elements.
-3. Do **not** introduce absolute XPath. If a selector is genuinely
-   ambiguous, prefer asking the dev team to add `data-testid`.
+Preference order, most stable first:
+
+1. **Id attribute** (Diaflow convention): `page.locator('#some-id')`.
+   Most stable — not affected by layout, text changes, or i18n.
+   Confirmed examples in the codebase today:
+   - `#input-search-filter` — Pages search input
+2. **Semantic role + accessible name**: `getByRole('button', { name: 'Continue with Email' })`.
+3. **Scoped text**: `page.locator('main').getByText('Pages', { exact: true })`
+   or `dialog.getByRole('button', { name: 'Cancel' })` — use when no id
+   exists and the role match isn't unique.
+4. Do **not** introduce absolute XPath. If a selector is genuinely
+   ambiguous and no `id` exists, ask the dev team to add one (their
+   convention is `id="..."` — *not* `data-testid`).
+
+When writing new POM locators:
+- First run a small diagnostic (`await el.getAttribute('id')`) to see if
+  the element already has an id. Use it if so.
+- Only fall through to role/text when no id is present.
+- Periodically re-audit ids on screens you touch — coverage grows over
+  time as the dev team backfills the convention.
 
 ## SPA navigation
 

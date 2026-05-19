@@ -39,7 +39,10 @@ export class PagesPage extends BasePage {
     super(page);
     this.pagesNav = page.getByText('Pages', { exact: true }).first();
     this.heading = page.locator('main').getByText('Pages', { exact: true });
-    this.searchInput = page.getByRole('textbox', { name: 'Search' });
+    // Diaflow team's convention is plain `id` attributes (not data-testid).
+    // The Pages search input is one of the few elements already tagged —
+    // use the id directly for the most stable locator.
+    this.searchInput = page.locator('#input-search-filter');
     // 'Create' appears twice in main: the toolbar button (primary, first in
     // DOM order) and a badge button inside the Personal tab. We grab the
     // toolbar one for the document-create menu.
